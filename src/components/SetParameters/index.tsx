@@ -15,7 +15,6 @@ interface SetParametersProps {
   setHintSpy: () => void;
   gameDuration: number;
   setGameDuration: (duration: number) => void;
-  isGeneratingHint: boolean;
 }
 
 export const SetParameters = ({
@@ -31,7 +30,6 @@ export const SetParameters = ({
   setHintSpy,
   gameDuration,
   setGameDuration,
-  isGeneratingHint,
 }: SetParametersProps) => {
   const { t } = useLanguage();
 
@@ -125,12 +123,8 @@ export const SetParameters = ({
           </button>
         </div>
       </div>
-      <button
-        onClick={onStartGame}
-        className={styles.startBtn}
-        disabled={isGeneratingHint}
-      >
-        {isGeneratingHint ? t("generating") : t("start")}
+      <button onClick={onStartGame} className={styles.startBtn}>
+        {t("start")}
       </button>
     </div>
   );

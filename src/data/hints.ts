@@ -1,7 +1,9 @@
 const hintsType = [
-  // { type: "First Letter" },
-  // { type: "The part of the word is" },
-  { type: "The specific hint" },
+  { type: "Underlined" },
+  { type: "FirstLast" },
+  { type: "FirstLetter" },
+  { type: "PartOfWord" },
+  { type: "RandomMasked" },
 ];
 
 export default hintsType;

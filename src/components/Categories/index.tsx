@@ -5,8 +5,7 @@ import { useState } from "react";
 import { SetParameters } from "../SetParameters";
 import { Game } from "../Game";
 import hintsType from "../../data/hints";
-import { getAIHint } from "../../utils/openai.ts";
-import { armenianToEnglish } from "../../data/translations";
+import { generateHint, HintType } from "../../utils/hintGenerator";
 import { useLanguage } from "../../shared/LanguageContext";
 
 type Role = "NORMAL" | "SPY" | "HELPER";
@@ -36,23 +35,20 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
     return saved ? Number(saved) : 1;
   });
   const [hintSpy, setHintSpy] = useState(false);
-  const [spyHint, setSpyHint] = useState<null | string>(null);
   const [specificHintContent, setSpecificHintContent] = useState<null | string>(
     null,
   );
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const [startGame, setStartGame] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayer, setCurrentPlayer] = useState(0);
   const [isCardOpen, setIsCardOpen] = useState(false);
-  const [prevSecretWord, setPrevSecretWord] = useState<string | null>(null);
   const [theSecretWord, setTheSecretWord] = useState("");
   const [gameDuration, setGameDuration] = useState(() => {
     const saved = localStorage.getItem("gameDuration");
     return saved ? Number(saved) : 5;
   });
-  const [isGeneratingHint, setIsGeneratingHint] = useState(false);
 
   const handlePlayersCountChange = (count: number) => {
     setPlayersCount(count);
@@ -123,27 +119,16 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
       }
     }
 
-    setPrevSecretWord(secretWord);
     if (hintSpy) {
       const randomHint =
         hintsType[Math.floor(Math.random() * hintsType.length)];
 
-      if (randomHint.type === "The specific hint") {
-        setSpyHint(randomHint.type);
-        setIsGeneratingHint(true);
-        try {
-          const translatedWord = armenianToEnglish[secretWord] || secretWord;
-          const aiHint = await getAIHint(translatedWord, language);
-          setSpecificHintContent(aiHint);
-        } finally {
-          setIsGeneratingHint(false);
-        }
-      } else {
-        setSpyHint(randomHint.type);
-        setSpecificHintContent(null);
-      }
+      const generatedHint = generateHint(
+        secretWord,
+        randomHint.type as HintType,
+      );
+      setSpecificHintContent(generatedHint);
     } else {
-      setSpyHint(null);
       setSpecificHintContent(null);
     }
     setPlayers(generatedPlayers);
@@ -164,11 +149,9 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
           secretWord={theSecretWord}
           players={players}
           currentPlayer={currentPlayer}
-          spyHint={spyHint}
           specificHintContent={specificHintContent}
           isCardOpen={isCardOpen}
           hintSpy={hintSpy}
-          prevSecretWord={prevSecretWord}
           onFinish={handleFinishGame}
           gameDuration={gameDuration}
           toggleCard={() => {
@@ -199,7 +182,6 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
                 onStartGame={startGameHandler}
                 gameDuration={gameDuration}
                 setGameDuration={handleGameDurationChange}
-                isGeneratingHint={isGeneratingHint}
               />
             ) : (
               categoriesData.map((category) => (

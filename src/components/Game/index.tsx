@@ -14,11 +14,9 @@ interface Player {
 type GameProps = {
   players: Player[];
   currentPlayer: number;
-  spyHint: string | null;
   specificHintContent: string | null;
   isCardOpen: boolean;
   hintSpy: boolean;
-  prevSecretWord: string | null;
   onFinish: () => void;
   toggleCard: () => void;
   secretWord: string;
@@ -28,11 +26,9 @@ type GameProps = {
 export const Game = ({
   players,
   currentPlayer,
-  spyHint,
   specificHintContent,
   isCardOpen,
   hintSpy,
-  prevSecretWord,
   onFinish,
   toggleCard,
   secretWord,
@@ -141,79 +137,11 @@ export const Game = ({
                 players[currentPlayer].role === "SPY" ? (
                   <>
                     {t("spy")}
-                    {hintSpy && spyHint && prevSecretWord && (
+                    {hintSpy && specificHintContent && (
                       <div className={styles.spyHint}>
-                        {spyHint === "First Letter" && (
-                          <span className={styles.hint}>
-                            {t("firstLetter")}{" "}
-                            {(() => {
-                              const cleanedWord = prevSecretWord.replace(
-                                / /g,
-                                "",
-                              );
-
-                              if (
-                                cleanedWord[0] === "ո" &&
-                                cleanedWord[1] === "ւ"
-                              ) {
-                                return "ու";
-                              }
-
-                              return cleanedWord[0];
-                            })()}
-                          </span>
-                        )}
-                        {spyHint === "The part of the word is" &&
-                          prevSecretWord.length >= 2 && (
-                            <span className={styles.hint}>
-                              {t("partOfWord")}{" "}
-                              {(() => {
-                                const cleanedWord = prevSecretWord.replace(
-                                  / /g,
-                                  "",
-                                );
-                                const letters: string[] = [];
-                                let i = 0;
-
-                                while (i < cleanedWord.length) {
-                                  if (
-                                    cleanedWord[i] === "ո" &&
-                                    cleanedWord[i + 1] === "ւ"
-                                  ) {
-                                    letters.push("ու");
-                                    i += 2;
-                                  } else {
-                                    letters.push(cleanedWord[i]);
-                                    i++;
-                                  }
-                                }
-
-                                const maxIndex = letters.length - 1;
-                                let attempts = 0;
-
-                                while (attempts <= maxIndex) {
-                                  const start = Math.floor(
-                                    Math.random() * maxIndex,
-                                  );
-                                  const part = letters
-                                    .slice(start, start + 2)
-                                    .join("");
-                                  if (!part.includes(" ")) {
-                                    return part;
-                                  }
-                                  attempts++;
-                                }
-
-                                return letters.slice(0, 2).join("");
-                              })()}
-                            </span>
-                          )}
-                        {spyHint === "The specific hint" &&
-                          specificHintContent && (
-                            <span className={styles.hint}>
-                              {specificHintContent}
-                            </span>
-                          )}
+                        <span className={styles.hint}>
+                          {specificHintContent}
+                        </span>
                       </div>
                     )}
                   </>
