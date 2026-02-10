@@ -40,6 +40,8 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
   const [specificHintContent, setSpecificHintContent] = useState<null | string>(
     null,
   );
+  const { t, language } = useLanguage();
+
   const [startGame, setStartGame] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayer, setCurrentPlayer] = useState(0);
@@ -131,7 +133,7 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
         setIsGeneratingHint(true);
         try {
           const translatedWord = armenianToEnglish[secretWord] || secretWord;
-          const aiHint = await getAIHint(translatedWord);
+          const aiHint = await getAIHint(translatedWord, language);
           setSpecificHintContent(aiHint);
         } finally {
           setIsGeneratingHint(false);
@@ -150,8 +152,6 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
     setStartGame(true);
     onGameStateChange(true);
   };
-
-  const { t } = useLanguage();
 
   const getTranslatedCategory = (name: string) => {
     return t(name);

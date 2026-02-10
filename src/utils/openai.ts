@@ -1,11 +1,17 @@
-export async function getAIHint(secretWord: string): Promise<string> {
+export async function getAIHint(
+  secretWord: string,
+  language: "am" | "en",
+): Promise<string> {
   try {
     const response = await fetch(
       "https://site--spy-game-be--qm97qxrrfmwg.code.run/api/hint",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ word: secretWord }),
+        body: JSON.stringify({
+          word: secretWord,
+          language,
+        }),
       },
     );
 
@@ -14,12 +20,13 @@ export async function getAIHint(secretWord: string): Promise<string> {
     }
 
     const data = await response.json();
-    console.log("AI response:", data); // { hint: "Связано с Францией" }
+    console.log("AI response:", data); // { hint: "e _ _ ph" }
 
-    return data.hint; // <== исправлено
+    return data.hint;
   } catch (error) {
     console.error("Failed to fetch AI hint from server:", error);
-    // fallback на первую букву
-    return `Первая буква: ${secretWord[0]}`;
+
+    // 🔥 Smart fallback: random hint locally
+    return secretWord.length <= 4 ? secretWord[0] : `${secretWord[0]} _ _`;
   }
 }
