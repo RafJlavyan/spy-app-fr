@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
+import { useLanguage } from "../../shared/LanguageContext";
+import { armenianToEnglish } from "../../data/translations";
 
 type Role = "NORMAL" | "SPY" | "HELPER";
 
@@ -36,10 +38,18 @@ export const Game = ({
   secretWord,
   gameDuration,
 }: GameProps) => {
+  const { language, t } = useLanguage();
   const [showWord, setShowWord] = useState(false);
   const [timeLeft, setTimeLeft] = useState(gameDuration * 60);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const isGameOver = currentPlayer >= players.length;
+
+  const translateWord = (word: string) => {
+    if (language === "en") {
+      return armenianToEnglish[word] || word;
+    }
+    return word;
+  };
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval>;
@@ -108,32 +118,34 @@ export const Game = ({
           <div className={styles.timerWrapper}>
             {timeLeft > 0 ? (
               <>
-                <h3>Մնացած ժամանակը</h3>
+                <h3>{t("remainingTime")}</h3>
                 <div className={styles.timer}>{formatTime(timeLeft)}</div>
               </>
             ) : (
-              <h3 className={styles.timesUp}>Ժամանակն ավարտվեց:</h3>
+              <h3 className={styles.timesUp}>{t("timesUp")}</h3>
             )}
           </div>
           <button onClick={onFinish} className={styles.finishBtn}>
-            Ավարտել խաղը
+            {t("endGame")}
           </button>
         </div>
       ) : (
         <div className={styles.cardSection}>
-          <h3>Խաղացող {currentPlayer + 1}</h3>
+          <h3>
+            {t("player")} {currentPlayer + 1}
+          </h3>
 
           <div className={styles.card}>
             <div className={styles.wordWrapper}>
               {isCardOpen ? (
                 players[currentPlayer].role === "SPY" ? (
                   <>
-                    SPY
+                    {t("spy")}
                     {hintSpy && spyHint && prevSecretWord && (
                       <div className={styles.spyHint}>
                         {spyHint === "First Letter" && (
                           <span className={styles.hint}>
-                            Առաջին տառը՝{" "}
+                            {t("firstLetter")}{" "}
                             {(() => {
                               const cleanedWord = prevSecretWord.replace(
                                 / /g,
@@ -154,7 +166,7 @@ export const Game = ({
                         {spyHint === "The part of the word is" &&
                           prevSecretWord.length >= 2 && (
                             <span className={styles.hint}>
-                              Բառի մի մասը՝{" "}
+                              {t("partOfWord")}{" "}
                               {(() => {
                                 const cleanedWord = prevSecretWord.replace(
                                   / /g,
@@ -207,18 +219,18 @@ export const Game = ({
                   </>
                 ) : players[currentPlayer].role === "HELPER" ? (
                   <>
-                    {players[currentPlayer].word}
+                    {translateWord(players[currentPlayer].word)}
                     <br />
                     <span className={styles.helper}>
-                      Լրտեսը №{" "}
+                      {t("spyIsPlayer")}{" "}
                       {players[currentPlayer].spiesIndexes
                         ?.map((i) => i + 1)
                         .join(", ")}{" "}
-                      խաղացողն է
+                      {t("isPlayer")}
                     </span>
                   </>
                 ) : (
-                  players[currentPlayer].word
+                  translateWord(players[currentPlayer].word)
                 )
               ) : (
                 "—"
@@ -234,14 +246,14 @@ export const Game = ({
                   isCardOpen && isButtonDisabled ? "not-allowed" : "pointer",
               }}
             >
-              {isCardOpen ? "Փակել քարտը" : "Բացել քարտը"}
+              {isCardOpen ? t("closeCard") : t("openCard")}
             </button>
             <p
               style={{ opacity: showWord ? 1 : 0, marginTop: "64px" }}
               onClick={() => setShowWord(false)}
               onDoubleClick={() => setShowWord(true)}
             >
-              {secretWord}
+              {translateWord(secretWord)}
             </p>
           </div>
         </div>

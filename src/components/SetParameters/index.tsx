@@ -1,4 +1,5 @@
 import { ToggleButton } from "../../shared/ui/ToggleButton";
+import { useLanguage } from "../../shared/LanguageContext";
 import styles from "./styles.module.scss";
 
 interface SetParametersProps {
@@ -32,6 +33,8 @@ export const SetParameters = ({
   setGameDuration,
   isGeneratingHint,
 }: SetParametersProps) => {
+  const { t } = useLanguage();
+
   const incrementPlayers = () => setPlayersCount(playersCount + 1);
   const decrementPlayers = () => {
     if (playersCount > 3) {
@@ -65,7 +68,7 @@ export const SetParameters = ({
         <span>&#8592;</span>
       </button>
       <div className={styles.block}>
-        <h4>Ընդհանուր խաղացողների քանակը</h4>
+        <h4>{t("totalPlayers")}</h4>
         <div className={styles.countWrapper}>
           <button onClick={decrementPlayers} disabled={playersCount <= 3}>
             -
@@ -75,7 +78,7 @@ export const SetParameters = ({
         </div>
       </div>
       <div className={styles.block}>
-        <h4>Որից լրտեսների քանակը</h4>
+        <h4>{t("spiesCount")}</h4>
         <div className={styles.countWrapper}>
           <button onClick={decrementSpies} disabled={spiesCount <= 1}>
             -
@@ -90,13 +93,13 @@ export const SetParameters = ({
         </div>
       </div>
       <div className={`${styles.block} ${styles.toggleParametr}`}>
-        <h4>Հուշում լրտեսին</h4>
+        <h4>{t("hintSpy")}</h4>
         <div className={styles.countWrapper}>
           <ToggleButton isActive={hintSpy} onToggle={setHintSpy} />
         </div>
       </div>
       <div className={`${styles.block} ${styles.toggleParametr}`}>
-        <h4>Լրտեսի oգնական</h4>
+        <h4>{t("spyHelper")}</h4>
         <div className={styles.countWrapper}>
           <ToggleButton
             isActive={helpersCount === 1}
@@ -105,7 +108,7 @@ export const SetParameters = ({
         </div>
       </div>
       <div className={styles.block}>
-        <h4>Խաղի տևողությունը (րոպե)</h4>
+        <h4>{t("gameDuration")}</h4>
         <div className={styles.countWrapper}>
           <button
             onClick={() => setGameDuration(Math.max(1, gameDuration - 1))}
@@ -127,10 +130,8 @@ export const SetParameters = ({
         className={styles.startBtn}
         disabled={isGeneratingHint}
       >
-        {isGeneratingHint ? "Գեներացվում է..." : "Սկսել"}
+        {isGeneratingHint ? t("generating") : t("start")}
       </button>
     </div>
   );
 };
-
-// jj

@@ -20,7 +20,7 @@
   right: 0;
   bottom: 0;
   background-color: white;
-  border: 1px solid #825d30;
+  border: 1px solid #007bff;
   transition: 0.4s;
   border-radius: 32px;
   outline: none;
@@ -32,7 +32,7 @@
   height: 25px;
   width: 25px;
   border-radius: 50%;
-  outline: 2px solid #825d30;
+  outline: 2px solid #007bff;
   left: -1px;
   bottom: -1px;
   background-color: #fff;
@@ -46,14 +46,16 @@
   stroke-width: 8;
   position: absolute;
   z-index: 999;
-  stroke: #825d30;
+  stroke: #007bff;
   right: 60%;
   top: 30%;
-  transition: right ease-in-out 0.3s, opacity ease-in-out 0.15s;
+  transition:
+    right ease-in-out 0.3s,
+    opacity ease-in-out 0.15s;
 }
 
 input:checked + .slider {
-  background-color: #825d30;
+  background-color: #007bff;
 }
 
 input:checked + .slider .slider-icon {
@@ -63,5 +65,5 @@ input:checked + .slider .slider-icon {
 
 input:checked + .slider:before {
   transform: translateX(2em);
-  outline-color: #825d30;
+  outline-color: #007bff;
 }

@@ -6,7 +6,7 @@
     color: white;
     outline: none;
     border: none;
-    background-color: #825d30;
+    background-color: #007bff;
     padding: 8px 12px;
     border-radius: 8px;
     font-size: 16px;
@@ -40,9 +40,10 @@
 .helper,
 .hint {
   font-size: 14px;
-  background-color: #be8846;
+  background-color: rgba(0, 123, 255, 0.3);
   padding: 4px 8px;
   border-radius: 8px;
+  border: 1px solid rgba(0, 123, 255, 0.5);
 }
 .gameOverSection {
   display: flex;
@@ -59,7 +60,7 @@
     .timer {
       font-size: 48px;
       font-weight: bold;
-      color: #be8846;
+      color: #007bff;
     }
 
     .timesUp {

@@ -7,6 +7,7 @@ import { Game } from "../Game";
 import hintsType from "../../data/hints";
 import { getAIHint } from "../../utils/openai.ts";
 import { armenianToEnglish } from "../../data/translations";
+import { useLanguage } from "../../shared/LanguageContext";
 
 type Role = "NORMAL" | "SPY" | "HELPER";
 
@@ -16,7 +17,11 @@ interface Player {
   spiesIndexes?: number[];
 }
 
-const Categories = () => {
+interface CategoriesProps {
+  onGameStateChange: (isStarted: boolean) => void;
+}
+
+const Categories = ({ onGameStateChange }: CategoriesProps) => {
   const [choosenCategory, setChoosenCategory] = useState("");
   const [playersCount, setPlayersCount] = useState(() => {
     const saved = localStorage.getItem("playersCount");
@@ -73,6 +78,7 @@ const Categories = () => {
   const handleFinishGame = () => {
     setChoosenCategory("");
     setStartGame(false);
+    onGameStateChange(false);
   };
 
   const startGameHandler = async () => {
@@ -142,6 +148,13 @@ const Categories = () => {
     setCurrentPlayer(0);
     setIsCardOpen(false);
     setStartGame(true);
+    onGameStateChange(true);
+  };
+
+  const { t } = useLanguage();
+
+  const getTranslatedCategory = (name: string) => {
+    return t(name);
   };
 
   return (
@@ -169,7 +182,7 @@ const Categories = () => {
         />
       ) : (
         <>
-          {!choosenCategory && <h3>Ընտրեք բառացանկը</h3>}
+          {!choosenCategory && <h3>{t("selectCategory")}</h3>}
 
           <div className={styles.categories}>
             {choosenCategory ? (
@@ -195,7 +208,7 @@ const Categories = () => {
                   className={styles.category}
                   onClick={() => setChoosenCategory(category.name)}
                 >
-                  <h4>{category.name}</h4>
+                  <h4>{getTranslatedCategory(category.name)}</h4>
                 </div>
               ))
             )}

@@ -4,21 +4,13 @@
   box-sizing: border-box;
 }
 html {
-  background: radial-gradient(
-    circle,
-    rgba(145, 86, 17, 1) 0%,
-    rgba(71, 43, 6, 1) 100%
-  );
+  background: radial-gradient(circle, #001f3f 0%, #000b1e 100%);
 }
 body {
-  display: none;
-  background: #915611;
-  background: radial-gradient(
-    circle,
-    rgba(145, 86, 17, 1) 0%,
-    rgba(71, 43, 6, 1) 100%
-  );
-  @media screen and (max-width: 481px) {
-    display: flex;
-  }
+  background: #001f3f;
+  background: radial-gradient(circle, #001f3f 0%, #000b1e 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
