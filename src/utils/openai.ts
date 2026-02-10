@@ -1,10 +1,13 @@
 export async function getAIHint(secretWord: string): Promise<string> {
   try {
-    const response = await fetch(import.meta.env.VITE_API_URL + "/api/hint", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ word: secretWord }),
-    });
+    const response = await fetch(
+      "https://site--spy-game-be--qm97qxrrfmwg.code.run/api/hint",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ word: secretWord }),
+      },
+    );
 
     if (!response.ok) {
       throw new Error(`Server error: ${response.statusText}`);
