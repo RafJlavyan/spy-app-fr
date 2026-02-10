@@ -1,0 +1,63 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  position: relative;
+
+  button {
+    outline: none;
+    border: none;
+    font-size: 16px;
+    padding: 4px 12px;
+    border-radius: 8px;
+    color: white;
+    background-color: #825d30;
+  }
+
+  .startBtn {
+    min-width: 150px;
+    height: 44px;
+  }
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.toggleParametr {
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 64px;
+  width: 100%;
+}
+
+.countWrapper {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+
+  button {
+    outline: none;
+    border: none;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+    background-color: rgba(128, 128, 128, 0.5);
+    color: white;
+  }
+}
+
+.goBackArrow {
+  position: absolute;
+  top: -64px;
+  left: -32px;
+  width: 42px;
+  height: 42px;
+}

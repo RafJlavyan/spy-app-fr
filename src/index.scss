@@ -1,0 +1,24 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+html {
+  background: radial-gradient(
+    circle,
+    rgba(145, 86, 17, 1) 0%,
+    rgba(71, 43, 6, 1) 100%
+  );
+}
+body {
+  display: none;
+  background: #915611;
+  background: radial-gradient(
+    circle,
+    rgba(145, 86, 17, 1) 0%,
+    rgba(71, 43, 6, 1) 100%
+  );
+  @media screen and (max-width: 481px) {
+    display: flex;
+  }
+}

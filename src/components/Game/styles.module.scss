@@ -1,0 +1,74 @@
+.cardWrapper {
+  button {
+    margin: 0 auto;
+    width: 180px;
+    height: 44px;
+    color: white;
+    outline: none;
+    border: none;
+    background-color: #825d30;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+}
+
+.cardSection {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: center;
+
+  h3,
+  p {
+    font-size: 20px;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.wordWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.helper,
+.hint {
+  font-size: 14px;
+  background-color: #be8846;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+.gameOverSection {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  text-align: center;
+  align-items: center;
+
+  .timerWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .timer {
+      font-size: 48px;
+      font-weight: bold;
+      color: #be8846;
+    }
+
+    .timesUp {
+      color: #ff4d4d;
+      font-size: 24px;
+    }
+  }
+
+  .finishBtn {
+    margin-top: 24px;
+  }
+}
