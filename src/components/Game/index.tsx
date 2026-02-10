@@ -72,7 +72,7 @@ export const Game = ({
       setIsButtonDisabled(true);
       const timer = setTimeout(() => {
         setIsButtonDisabled(false);
-      }, 2000);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [isCardOpen, isGameOver]);
