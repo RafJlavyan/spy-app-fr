@@ -99,7 +99,11 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
     while (spiesPlaced < spiesCount) {
       const index = Math.floor(Math.random() * playersCount);
       if (generatedPlayers[index].role !== "SPY") {
-        generatedPlayers[index] = { role: "SPY", word: "SPY" };
+        generatedPlayers[index] = {
+          role: "SPY",
+          word: "SPY",
+          spiesIndexes: spiesIndexes,
+        };
         spiesIndexes.push(index);
         spiesPlaced++;
       }

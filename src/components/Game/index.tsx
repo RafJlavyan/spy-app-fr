@@ -130,13 +130,24 @@ export const Game = ({
           <h3>
             {t("player")} {currentPlayer + 1}
           </h3>
-
           <div className={styles.card}>
             <div className={styles.wordWrapper}>
               {isCardOpen ? (
                 players[currentPlayer].role === "SPY" ? (
-                  <>
+                  <div className={styles.spy}>
                     {t("spy")}
+                    {players[currentPlayer].spiesIndexes &&
+                      players[currentPlayer].spiesIndexes!.length > 1 && (
+                        <div className={styles.spyHint}>
+                          <span className={styles.helper}>
+                            {t("otherSpies")}
+                            {players[currentPlayer]
+                              .spiesIndexes!.filter((i) => i !== currentPlayer)
+                              .map((i) => i + 1)
+                              .join(", ")}
+                          </span>
+                        </div>
+                      )}
                     {hintSpy && specificHintContent && (
                       <div className={styles.spyHint}>
                         <span className={styles.hint}>
@@ -144,7 +155,7 @@ export const Game = ({
                         </span>
                       </div>
                     )}
-                  </>
+                  </div>
                 ) : players[currentPlayer].role === "HELPER" ? (
                   <>
                     {translateWord(players[currentPlayer].word)}
@@ -164,7 +175,6 @@ export const Game = ({
                 "—"
               )}
             </div>
-
             <button
               onClick={toggleCard}
               disabled={isCardOpen && isButtonDisabled}
