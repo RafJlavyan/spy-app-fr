@@ -87,6 +87,7 @@ const uiTranslations: Record<Language, Record<string, string>> = {
     "Հայտնի մարդիկ": "Հայտնի մարդիկ",
     Տեղանուններ: "Տեղանուններ",
     Կերպարներ: "Կերպարներ",
+    Առարկաներ: "Առարկաներ",
   },
   en: {
     settings: "Settings",
@@ -127,5 +128,6 @@ const uiTranslations: Record<Language, Record<string, string>> = {
     "Հայտնի մարդիկ": "Famous People",
     Տեղանուններ: "Place Names",
     Կերպարներ: "Characters",
+    Առարկաներ: "Objects",
   },
 };

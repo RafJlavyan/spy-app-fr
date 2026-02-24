@@ -15,6 +15,7 @@ interface SetParametersProps {
   setHintSpy: () => void;
   gameDuration: number;
   setGameDuration: (duration: number) => void;
+  isSpecialCategory?: boolean;
 }
 
 export const SetParameters = ({
@@ -30,6 +31,7 @@ export const SetParameters = ({
   setHintSpy,
   gameDuration,
   setGameDuration,
+  isSpecialCategory,
 }: SetParametersProps) => {
   const { t } = useLanguage();
 
@@ -93,7 +95,11 @@ export const SetParameters = ({
       <div className={`${styles.block} ${styles.toggleParametr}`}>
         <h4>{t("hintSpy")}</h4>
         <div className={styles.countWrapper}>
-          <ToggleButton isActive={hintSpy} onToggle={setHintSpy} />
+          <ToggleButton
+            isActive={hintSpy}
+            onToggle={isSpecialCategory ? () => {} : setHintSpy}
+            disabled={isSpecialCategory}
+          />
         </div>
       </div>
       <div className={`${styles.block} ${styles.toggleParametr}`}>
@@ -101,7 +107,12 @@ export const SetParameters = ({
         <div className={styles.countWrapper}>
           <ToggleButton
             isActive={helpersCount === 1}
-            onToggle={() => setHelpersCount(helpersCount === 1 ? 0 : 1)}
+            onToggle={
+              isSpecialCategory
+                ? () => {}
+                : () => setHelpersCount(helpersCount === 1 ? 0 : 1)
+            }
+            disabled={isSpecialCategory}
           />
         </div>
       </div>

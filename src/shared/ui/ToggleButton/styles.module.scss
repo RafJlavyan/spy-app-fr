@@ -67,3 +67,9 @@ input:checked + .slider:before {
   transform: translateX(2em);
   outline-color: #007bff;
 }
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

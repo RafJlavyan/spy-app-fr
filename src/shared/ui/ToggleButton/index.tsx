@@ -3,12 +3,22 @@ import styles from "./styles.module.scss";
 type ToggleButtonProps = {
   isActive: boolean;
   onToggle: () => void;
+  disabled?: boolean;
 };
 
-export const ToggleButton = ({ isActive, onToggle }: ToggleButtonProps) => {
+export const ToggleButton = ({
+  isActive,
+  onToggle,
+  disabled,
+}: ToggleButtonProps) => {
   return (
-    <label className={styles.switch}>
-      <input type="checkbox" checked={isActive} onChange={onToggle} />
+    <label className={`${styles.switch} ${disabled ? styles.disabled : ""}`}>
+      <input
+        type="checkbox"
+        checked={isActive}
+        onChange={onToggle}
+        disabled={disabled}
+      />
       <span className={styles.slider}>
         <svg
           className={styles.sliderIcon}

@@ -23,5 +23,9 @@
     background-color: #007bff;
     padding: 12px 16px;
     border-radius: 8px;
+
+    &.specialCategory {
+      background-color: #6f42c1; // Different color (purple) for special category
+    }
   }
 }

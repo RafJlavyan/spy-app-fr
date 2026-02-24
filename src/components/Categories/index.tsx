@@ -142,6 +142,14 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
     onGameStateChange(true);
   };
 
+  const handleSetChoosenCategory = (category: string) => {
+    setChoosenCategory(category);
+    if (category === "Առարկաներ") {
+      setHintSpy(false);
+      setHelpersCount(0);
+    }
+  };
+
   const getTranslatedCategory = (name: string) => {
     return t(name);
   };
@@ -186,13 +194,16 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
                 onStartGame={startGameHandler}
                 gameDuration={gameDuration}
                 setGameDuration={handleGameDurationChange}
+                isSpecialCategory={choosenCategory === "Առարկաներ"}
               />
             ) : (
               categoriesData.map((category) => (
                 <div
                   key={category.name}
-                  className={styles.category}
-                  onClick={() => setChoosenCategory(category.name)}
+                  className={`${styles.category} ${
+                    category.name === "Առարկաներ" ? styles.specialCategory : ""
+                  }`}
+                  onClick={() => handleSetChoosenCategory(category.name)}
                 >
                   <h4>{getTranslatedCategory(category.name)}</h4>
                 </div>
