@@ -99,6 +99,7 @@ const uiTranslations: Record<Language, Record<string, string>> = {
     or: "կամ",
     lobby: "Լոբբի",
     waitingForPlayers: "Սպասում ենք խաղացողներին...",
+    comingSoon: "Շուտով",
   },
   en: {
     settings: "Settings",
@@ -152,5 +153,6 @@ const uiTranslations: Record<Language, Record<string, string>> = {
     or: "or",
     lobby: "Lobby",
     waitingForPlayers: "Waiting for players...",
+    comingSoon: "Coming Soon",
   },
 };

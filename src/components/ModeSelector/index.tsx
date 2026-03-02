@@ -17,12 +17,16 @@ export const ModeSelector = ({ mode, onChange }: ModeSelectorProps) => {
       >
         {t("offline")}
       </button>
-      <button
-        className={`${styles.modeButton} ${mode === "online" ? styles.active : ""}`}
-        onClick={() => onChange("online")}
-      >
-        {t("online")}
-      </button>
+      <div className={styles.buttonContainer}>
+        <span className={styles.comingSoon}>{t("comingSoon")}</span>
+        <button
+          className={`${styles.modeButton} ${mode === "online" ? styles.active : ""}`}
+          onClick={() => onChange("online")}
+          disabled
+        >
+          {t("online")}
+        </button>
+      </div>
     </div>
   );
 };
