@@ -1,6 +1,6 @@
 const hintsType = [
   { type: "Underlined" },
-  { type: "FirstLast" },
+  // { type: "FirstLast" },
   { type: "FirstLetter" },
   { type: "PartOfWord" },
   { type: "RandomMasked" },
