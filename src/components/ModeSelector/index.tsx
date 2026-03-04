@@ -18,12 +18,12 @@ export const ModeSelector = ({ mode, onChange }: ModeSelectorProps) => {
         {t("offline")}
       </button>
       <button
-        className={`${styles.modeButton} ${mode === "online" ? styles.active : ""}`}
+        className={`${styles.modeButton} ${styles.onlineButton} ${mode === "online" ? styles.active : ""}`}
         onClick={() => onChange("online")}
       >
         {t("online")}
+        <p className={styles.betaTag}>BETA</p>
       </button>
-      <p className={styles.betaTag}>BETA</p>
     </div>
   );
 };
