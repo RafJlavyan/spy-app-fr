@@ -13,9 +13,8 @@ interface SetParametersProps {
   onStartGame: () => void;
   hintSpy: boolean;
   setHintSpy: () => void;
-  gameDuration: number;
-  setGameDuration: (duration: number) => void;
   isSpecialCategory?: boolean;
+  startButtonLabel?: string;
 }
 
 export const SetParameters = ({
@@ -29,9 +28,8 @@ export const SetParameters = ({
   onStartGame,
   hintSpy,
   setHintSpy,
-  gameDuration,
-  setGameDuration,
   isSpecialCategory,
+  startButtonLabel,
 }: SetParametersProps) => {
   const { t } = useLanguage();
 
@@ -116,26 +114,8 @@ export const SetParameters = ({
           />
         </div>
       </div>
-      <div className={styles.block}>
-        <h4>{t("gameDuration")}</h4>
-        <div className={styles.countWrapper}>
-          <button
-            onClick={() => setGameDuration(Math.max(1, gameDuration - 1))}
-            disabled={gameDuration <= 1}
-          >
-            -
-          </button>
-          <span>{gameDuration}</span>
-          <button
-            onClick={() => setGameDuration(Math.min(10, gameDuration + 1))}
-            disabled={gameDuration >= 10}
-          >
-            +
-          </button>
-        </div>
-      </div>
       <button onClick={onStartGame} className={styles.startBtn}>
-        {t("start")}
+        {startButtonLabel || t("start")}
       </button>
     </div>
   );

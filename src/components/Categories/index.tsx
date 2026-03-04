@@ -18,9 +18,21 @@ interface Player {
 
 interface CategoriesProps {
   onGameStateChange: (isStarted: boolean) => void;
+  onConfigComplete?: (config: {
+    categoryId: string;
+    playersCount: number;
+    spiesCount: number;
+    helpersCount: number;
+    hintSpy: boolean;
+  }) => void;
+  startButtonLabel?: string;
 }
 
-const Categories = ({ onGameStateChange }: CategoriesProps) => {
+const Categories = ({
+  onGameStateChange,
+  onConfigComplete,
+  startButtonLabel,
+}: CategoriesProps) => {
   const [choosenCategory, setChoosenCategory] = useState("");
   const [playersCount, setPlayersCount] = useState(() => {
     const saved = localStorage.getItem("playersCount");
@@ -45,10 +57,6 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
   const [currentPlayer, setCurrentPlayer] = useState(0);
   const [isCardOpen, setIsCardOpen] = useState(false);
   const [theSecretWord, setTheSecretWord] = useState("");
-  const [gameDuration, setGameDuration] = useState(() => {
-    const saved = localStorage.getItem("gameDuration");
-    return saved ? Number(saved) : 5;
-  });
 
   const handlePlayersCountChange = (count: number) => {
     setPlayersCount(count);
@@ -64,11 +72,6 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
     localStorage.setItem("spiesCount", count.toString());
   };
 
-  const handleGameDurationChange = (duration: number) => {
-    setGameDuration(duration);
-    localStorage.setItem("gameDuration", duration.toString());
-  };
-
   const handleBackToCategories = () => {
     setChoosenCategory("");
   };
@@ -80,6 +83,17 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
   };
 
   const startGameHandler = async () => {
+    if (onConfigComplete) {
+      onConfigComplete({
+        categoryId: choosenCategory,
+        playersCount,
+        spiesCount,
+        helpersCount,
+        hintSpy,
+      });
+      return;
+    }
+
     const options = optionsByCategory[choosenCategory];
 
     const secretWord = getUniqueSecretWord(options);
@@ -165,7 +179,6 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
           isCardOpen={isCardOpen}
           hintSpy={hintSpy}
           onFinish={handleFinishGame}
-          gameDuration={gameDuration}
           toggleCard={() => {
             if (isCardOpen) {
               setIsCardOpen(false);
@@ -192,9 +205,8 @@ const Categories = ({ onGameStateChange }: CategoriesProps) => {
                 setHintSpy={handleSetHintSpy}
                 goBack={handleBackToCategories}
                 onStartGame={startGameHandler}
-                gameDuration={gameDuration}
-                setGameDuration={handleGameDurationChange}
                 isSpecialCategory={choosenCategory === "Առարկաներ"}
+                startButtonLabel={startButtonLabel}
               />
             ) : (
               categoriesData.map((category) => (

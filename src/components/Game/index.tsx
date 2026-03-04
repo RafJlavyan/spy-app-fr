@@ -20,7 +20,6 @@ type GameProps = {
   onFinish: () => void;
   toggleCard: () => void;
   secretWord: string;
-  gameDuration: number;
 };
 
 export const Game = ({
@@ -32,36 +31,11 @@ export const Game = ({
   onFinish,
   toggleCard,
   secretWord,
-  gameDuration,
 }: GameProps) => {
   const { language, t } = useLanguage();
   const [showWord, setShowWord] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(gameDuration * 60);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const isGameOver = currentPlayer >= players.length;
-
-  const translateWord = (word: string) => {
-    if (language === "en") {
-      return armenianToEnglish[word] || word;
-    }
-    return word;
-  };
-
-  useEffect(() => {
-    let timer: ReturnType<typeof setInterval>;
-    if (isGameOver && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [isGameOver, timeLeft]);
-
-  useEffect(() => {
-    if (timeLeft === 0 && isGameOver) {
-      playBellSound();
-    }
-  }, [timeLeft, isGameOver]);
 
   useEffect(() => {
     if (isCardOpen && !isGameOver) {
@@ -73,54 +47,17 @@ export const Game = ({
     }
   }, [isCardOpen, isGameOver]);
 
-  const playBellSound = () => {
-    try {
-      const AudioContext =
-        window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioContext) return;
-
-      const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      // Bell-like parameters
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(600, ctx.currentTime); // Base frequency
-
-      // Envelope
-      gain.gain.setValueAtTime(1, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3); // Decay over 3 seconds
-
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 3);
-    } catch (e) {
-      console.error("Audio playback failed", e);
+  const translateWord = (word: string) => {
+    if (language === "en") {
+      return armenianToEnglish[word] || word;
     }
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    return word;
   };
 
   return (
     <div className={styles.cardWrapper}>
       {isGameOver ? (
         <div className={styles.gameOverSection}>
-          <div className={styles.timerWrapper}>
-            {timeLeft > 0 ? (
-              <>
-                <h3>{t("remainingTime")}</h3>
-                <div className={styles.timer}>{formatTime(timeLeft)}</div>
-              </>
-            ) : (
-              <h3 className={styles.timesUp}>{t("timesUp")}</h3>
-            )}
-          </div>
           <button onClick={onFinish} className={styles.finishBtn}>
             {t("endGame")}
           </button>

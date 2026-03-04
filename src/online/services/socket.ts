@@ -1,19 +1,32 @@
 import { io, Socket } from "socket.io-client";
 
-// In a real scenario, this would come from an environment variable
-const SOCKET_URL = "http://localhost:3000";
+const SOCKET_URL = "https://site--spy-game-be--qm97qxrrfmwg.code.run";
 
-export interface JoinRoomData {
-  roomCode: string;
-  name: string;
-  clientId: string;
+export interface RoomConfig {
+  categoryId: string;
+  playersCount: number;
+  spiesCount: number;
+  helpersCount: number;
+  hintSpy: boolean;
 }
 
-export interface GameState {
+export interface Player {
+  socketId: string;
+  clientId: string;
+  name: string;
+  isSpy: boolean;
+  isHost: boolean;
+  isReady: boolean;
+  role?: "spy" | "helper" | "player";
+  word?: string;
+}
+
+export interface Room {
   roomCode: string;
-  players: { name: string; clientId: string; isHost: boolean }[];
-  status: "lobby" | "playing" | "voting";
-  // Add more state as needed
+  hostSocketId: string;
+  players: Player[];
+  gameState: "lobby" | "playing" | "voting";
+  config: RoomConfig;
 }
 
 class SocketService {
@@ -34,19 +47,65 @@ class SocketService {
     }
   }
 
-  joinRoom(data: JoinRoomData) {
+  leaveRoom() {
+    this.socket?.emit("leave_room");
+  }
+
+  joinRoom(data: { roomCode: string; name: string; clientId: string }) {
     this.socket?.emit("join_room", data);
   }
 
-  createRoom(data: { name: string; clientId: string }) {
+  createRoom(data: { name: string; clientId: string; config: RoomConfig }) {
     this.socket?.emit("create_room", data);
   }
 
-  onGameStateUpdate(callback: (state: GameState) => void) {
-    this.socket?.on("game_state_update", callback);
+  startGame(data: {
+    roomCode: string;
+    players: Player[];
+    currentWord: string;
+  }) {
+    this.socket?.emit("start_game", data);
   }
 
-  // Abstract more events as needed
+  resetGame(roomCode: string) {
+    this.socket?.emit("reset_game", { roomCode });
+  }
+
+  updateRoomConfig(roomCode: string, config: RoomConfig) {
+    this.socket?.emit("update_room_config", { roomCode, config });
+  }
+
+  toggleReady(roomCode: string, clientId: string) {
+    this.socket?.emit("toggle_ready", { roomCode, clientId });
+  }
+
+  onRoomCreated(callback: (room: Room) => void) {
+    this.socket?.on("room_created", callback);
+  }
+
+  onRoomUpdated(callback: (room: Room) => void) {
+    this.socket?.on("room_updated", callback);
+  }
+
+  onGameStarted(callback: (room: Room) => void) {
+    this.socket?.on("game_started", callback);
+  }
+
+  onGameReset(callback: (room: Room) => void) {
+    this.socket?.on("game_reset", callback);
+  }
+
+  onRoomClosed(callback: () => void) {
+    this.socket?.on("room_closed", callback);
+  }
+
+  onPlayerLeftGame(callback: (data: { playerName: string }) => void) {
+    this.socket?.on("player_left_game", callback);
+  }
+
+  onError(callback: (error: string) => void) {
+    this.socket?.on("error", callback);
+  }
 }
 
 export const socketService = new SocketService();

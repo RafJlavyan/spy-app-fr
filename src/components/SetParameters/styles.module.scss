@@ -4,6 +4,7 @@
   justify-content: center;
   align-items: center;
   gap: 32px;
+  margin-top: 64px;
   position: relative;
 
   button {
@@ -57,7 +58,7 @@
 .goBackArrow {
   position: absolute;
   top: -64px;
-  left: -32px;
+  left: 0;
   width: 42px;
   height: 42px;
 }
