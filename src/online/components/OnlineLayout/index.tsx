@@ -77,15 +77,32 @@ export const OnlineLayout = () => {
     });
 
     const handleVisibilityChange = () => {
+      console.log("Visibility changed to:", document.visibilityState);
       if (document.visibilityState === "visible") {
-        if (!socketService.isConnected()) {
-          socketService.connect();
-        }
-        handleRejoin();
+        // Force a small delay to allow the OS to restore network
+        setTimeout(() => {
+          if (!socketService.isConnected()) {
+            console.log("Socket disconnected on wake, reconnecting...");
+            socketService.connect();
+          }
+          handleRejoin();
+        }, 500);
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Periodically check connection if in a room
+    const connectionCheckInterval = setInterval(() => {
+      const savedRoomCode = sessionStorage.getItem(ROOM_CODE_KEY);
+      if (savedRoomCode && !socketService.isConnected()) {
+        console.log(
+          "Periodic check: Socket disconnected, attempting re-join...",
+        );
+        socketService.connect();
+        handleRejoin();
+      }
+    }, 10000);
 
     socketService.onRoomCreated((newRoom) => {
       setRoom(newRoom);
@@ -136,6 +153,7 @@ export const OnlineLayout = () => {
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      clearInterval(connectionCheckInterval);
       socketService.disconnect();
     };
   }, [username, clientId, t]);

@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL = "https://site--spy-game-be--qm97qxrrfmwg.code.run";
+const SOCKET_URL = "http://localhost:3001";
 
 export interface RoomConfig {
   categoryId: string;
