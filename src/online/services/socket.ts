@@ -36,8 +36,17 @@ class SocketService {
     if (!this.socket) {
       this.socket = io(SOCKET_URL, {
         autoConnect: true,
+        reconnection: true,
+        reconnectionAttempts: Infinity,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 20000,
       });
     }
+  }
+
+  isConnected() {
+    return this.socket?.connected || false;
   }
 
   disconnect() {
@@ -105,6 +114,15 @@ class SocketService {
 
   onError(callback: (error: string) => void) {
     this.socket?.on("error", callback);
+    this.socket?.on("connect_error", (err) => callback(err.message));
+  }
+
+  onReconnect(callback: () => void) {
+    this.socket?.on("reconnect", callback);
+  }
+
+  onDisconnect(callback: (reason: string) => void) {
+    this.socket?.on("disconnect", callback);
   }
 }
 

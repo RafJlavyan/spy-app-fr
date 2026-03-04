@@ -8,20 +8,84 @@ import { optionsByCategory } from "../../../data/Categories";
 import { getUniqueSecretWord } from "../../../utils/getUniqueSecretWord";
 import hintsType from "../../../data/hints";
 import { generateHint, HintType } from "../../../utils/hintGenerator";
+import { useWakeLock } from "../../../utils/useWakeLock";
+
+const ROOM_STORAGE_KEY = "spyGame_currentRoom";
+const VIEW_STORAGE_KEY = "spyGame_currentView";
+const ROOM_CODE_KEY = "spyGame_currentRoomCode";
 
 type View = "selection" | "categories" | "lobby" | "game";
 
 export const OnlineLayout = () => {
-  const [view, setView] = useState<View>("selection");
-  const [roomCode, setRoomCode] = useState("");
   const { t } = useLanguage();
   const { username, clientId } = useOnlineIdentity();
 
-  const [room, setRoom] = useState<Room | null>(null);
+  const [view, setView] = useState<View>(() => {
+    const saved = sessionStorage.getItem(VIEW_STORAGE_KEY);
+    return (saved as View) || "selection";
+  });
+  const [roomCode, setRoomCode] = useState(() => {
+    return sessionStorage.getItem(ROOM_CODE_KEY) || "";
+  });
+
+  const [room, setRoom] = useState<Room | null>(() => {
+    const saved = sessionStorage.getItem(ROOM_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : null;
+  });
   const [error, setError] = useState<string | null>(null);
+
+  const { requestWakeLock, releaseWakeLock } = useWakeLock();
+
+  useEffect(() => {
+    sessionStorage.setItem(ROOM_STORAGE_KEY, JSON.stringify(room));
+    if (room) {
+      requestWakeLock();
+    } else {
+      releaseWakeLock();
+    }
+  }, [room, requestWakeLock, releaseWakeLock]);
+
+  useEffect(() => {
+    sessionStorage.setItem(VIEW_STORAGE_KEY, view);
+  }, [view]);
+
+  useEffect(() => {
+    sessionStorage.setItem(ROOM_CODE_KEY, roomCode);
+  }, [roomCode]);
 
   useEffect(() => {
     socketService.connect();
+
+    const handleRejoin = () => {
+      const savedRoomCode = sessionStorage.getItem(ROOM_CODE_KEY);
+      if (
+        savedRoomCode &&
+        username &&
+        clientId &&
+        !socketService.isConnected()
+      ) {
+        socketService.joinRoom({
+          roomCode: savedRoomCode,
+          name: username,
+          clientId: clientId,
+        });
+      }
+    };
+
+    socketService.onReconnect(() => {
+      handleRejoin();
+    });
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        if (!socketService.isConnected()) {
+          socketService.connect();
+        }
+        handleRejoin();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     socketService.onRoomCreated((newRoom) => {
       setRoom(newRoom);
@@ -59,6 +123,9 @@ export const OnlineLayout = () => {
       socketService.leaveRoom();
       setRoom(null);
       setView("selection");
+      sessionStorage.removeItem(ROOM_STORAGE_KEY);
+      sessionStorage.removeItem(ROOM_CODE_KEY);
+      sessionStorage.removeItem(VIEW_STORAGE_KEY);
       setTimeout(() => setError(null), 5000);
     });
 
@@ -68,9 +135,10 @@ export const OnlineLayout = () => {
     });
 
     return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       socketService.disconnect();
     };
-  }, []);
+  }, [username, clientId, t]);
 
   // Auto-start logic removed in favor of manual start button
   // as per user request (host should be able to create new game/category)
@@ -318,6 +386,9 @@ export const OnlineLayout = () => {
               socketService.leaveRoom();
               setView("selection");
               setRoom(null);
+              sessionStorage.removeItem(ROOM_STORAGE_KEY);
+              sessionStorage.removeItem(ROOM_CODE_KEY);
+              sessionStorage.removeItem(VIEW_STORAGE_KEY);
             }}
           >
             {t("back")}
@@ -355,6 +426,9 @@ export const OnlineLayout = () => {
                 socketService.leaveRoom();
                 setView("selection");
                 setRoom(null);
+                sessionStorage.removeItem(ROOM_STORAGE_KEY);
+                sessionStorage.removeItem(ROOM_CODE_KEY);
+                sessionStorage.removeItem(VIEW_STORAGE_KEY);
               }}
             >
               {t("leaveGame")}
